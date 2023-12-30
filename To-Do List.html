@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List</title>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .completed {
+      text-decoration: line-through;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>To-Do List</h1>
+    <div class="form-group">
+      <input type="text" id="taskInput" class="form-control" placeholder="Enter task">
+    </div>
+    <div class="form-group">
+      <button type="button" id="addButton" class="btn btn-primary">Add Task</button>
+      <button type="button" id="resetButton" class="btn btn-secondary">Reset List</button>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="todoList">
+        
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      var input = $("#taskInput");
+      var todoList = $("#todoList");
+
+      $("#addButton").click(function() {
+        var task = input.val().trim();
+        if (task !== "") {
+          var todoItem = $("<tr>");
+          var checkbox = $("<input>").attr("type", "checkbox").addClass("form-check-input");
+          var taskLabel = $("<td>").text(task);
+          var statusLabel = $("<td>").text("Next");
+          var actionButton = $("<td>").append($("<button>").addClass("btn btn-sm btn-success").text("Done"));
+          
+          checkbox.change(markAsCompleted);
+          actionButton.click(markAsDone);
+
+          todoItem.append($("<td>").append(checkbox));
+          todoItem.append(taskLabel);
+          todoItem.append(statusLabel);
+          todoItem.append(actionButton);
+
+          todoList.append(todoItem);
+
+          input.val("");
+        }
+      });
+
+      function markAsCompleted() {
+        var checkbox = $(this);
+        var todoItem = checkbox.closest("tr");
+        todoItem.toggleClass("completed");
+      }
+
+      function markAsDone() {
+        var button = $(this);
+        var todoItem = button.closest("tr");
+        todoItem.removeClass("completed");
+        todoItem.find("td:nth-child(3)").text("Done");
+        button.prop("disabled", true);
+      }
+
+      $("#resetButton").click(function() {
+        todoList.empty();
+        input.val("");
+      });
+    });
+  </script>
+</body>
+</html>
